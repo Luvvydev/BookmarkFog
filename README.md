@@ -4,6 +4,11 @@ BookmarkFog is a local Chrome extension for organizing bookmarks safely.
 
 It is built to protect the visible bookmarks bar by default. The top bar under the URL field is locked, including folders on that bar. BookmarkFog only works on bookmarks behind the menus unless you turn that protection off in settings.
 
+
+## Screenshot
+
+![BookmarkFog popup](assets/bookmarkfog_popup.png)
+
 ## Features
 
 - Local bookmark scan using Chrome's bookmarks API
