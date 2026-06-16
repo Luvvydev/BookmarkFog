@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BookmarkFog</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="icons/logo.svg" alt="BookmarkFog" class="logo" />
+        <div>
+          <h1>BookmarkFog</h1>
+          <p>Bookmark cleanup</p>
+        </div>
+      </div>
+      <button id="openDashboard" class="iconButton" title="Dashboard">⚙️</button>
+    </header>
+
+    <section class="statusCard">
+      <div class="statusLeft">
+        <span class="pulse"></span>
+        <div>
+          <strong id="statusText">Ready</strong>
+          <p id="subStatus">Scan safely before changing anything</p>
+        </div>
+      </div>
+      <button id="runScan" class="runButton">Run</button>
+    </section>
+
+    <section class="statsGrid">
+      <article>
+        <span>📚</span>
+        <strong id="statTotal">0</strong>
+        <p>Seen</p>
+      </article>
+      <article>
+        <span>🛡️</span>
+        <strong id="statProtected">0</strong>
+        <p>Locked</p>
+      </article>
+      <article>
+        <span>🔞</span>
+        <strong id="statNsfw">0</strong>
+        <p>Flagged</p>
+      </article>
+      <article>
+        <span>♻️</span>
+        <strong id="statDupes">0</strong>
+        <p>Dupes</p>
+      </article>
+    </section>
+
+    <section class="miniPanel">
+      <div class="panelHead">
+        <span class="ring">◎</span>
+        <div>
+          <small>LOCKED</small>
+          <strong>First top bar items</strong>
+          <p>Only first 14 locked by default</p>
+        </div>
+      </div>
+      <div id="barPreview" class="barPreview">Run scan to preview protected top bar items.</div>
+    </section>
+
+    <section class="quickActions">
+      <button id="backupJson">💾 Backup</button>
+      <button id="openFull">🧹 Review</button>
+    </section>
+
+    <button id="allSettings" class="settingsLink">All settings</button>
+  </main>
+
+  <script src="bookmarkfog-core.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

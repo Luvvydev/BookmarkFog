@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BookmarkFog Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="appShell">
+    <aside class="sidebar">
+      <div class="brandBlock">
+        <img src="icons/logo.svg" alt="BookmarkFog" class="brandLogo" />
+        <div>
+          <h1>BookmarkFog</h1>
+          <p>Local bookmark cleanup</p>
+        </div>
+      </div>
+
+      <nav class="navStack" aria-label="Dashboard sections">
+        <button class="navItem active" data-tab="review">🧹 <span>Review</span></button>
+        <button class="navItem" data-tab="nsfw">🔞 <span>NSFW</span></button>
+        <button class="navItem" data-tab="duplicates">♻️ <span>Dupes</span></button>
+        <button class="navItem" data-tab="backup">💾 <span>Backup</span></button>
+        <button class="navItem" data-tab="settings">⚙️ <span>Settings</span></button>
+      </nav>
+
+      <section class="lockCard">
+        <div class="lockIcon">🛡️</div>
+        <strong>Top bar locked</strong>
+        <p>Only the first 14 Bookmarks Bar items are protected by default. Existing folders move as whole folders instead of being torn apart.</p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="hero">
+        <div>
+          <div class="eyebrow">LOCAL ONLY · REVIEW FIRST · BACKUP FIRST</div>
+          <h2>Clean the mess behind your bookmark menus.</h2>
+          <p>Scan, sort, quarantine risky links, keep the first top bar items untouched, and move existing folders as whole folders by default.</p>
+        </div>
+        <div class="heroActions">
+          <button id="scanBtn" class="primaryBtn">Run scan</button>
+          <button id="organizeSafeBtn" class="primaryBtn secondaryPrimary">Organize safe now</button>
+          <button id="quickBackupBtn" class="ghostBtn">💾 Backup</button>
+        </div>
+      </header>
+
+      <section class="statsGrid" aria-label="Bookmark statistics">
+        <article><span>📚</span><strong id="totalBookmarks">0</strong><p>Total seen</p></article>
+        <article><span>🧹</span><strong id="suggestedMoves">0</strong><p>Suggested moves</p></article>
+        <article><span>🛡️</span><strong id="protectedBookmarks">0</strong><p>Protected</p></article>
+        <article><span>🔞</span><strong id="nsfwCount">0</strong><p>Flagged</p></article>
+        <article><span>♻️</span><strong id="duplicateCount">0</strong><p>Duplicates</p></article>
+        <article><span>📁</span><strong id="emptyFolderCount">0</strong><p>Empty folders</p></article>
+      </section>
+
+      <section class="toolbar">
+        <div class="searchBox">⌕ <input id="searchInput" type="search" placeholder="Search title, URL, folder, reason" /></div>
+        <div class="chipRow">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="organize">Organize</button>
+          <button class="chip" data-filter="nsfw">NSFW</button>
+          <button class="chip" data-filter="duplicate">Dupes</button>
+          <button class="chip" data-filter="protected">Locked</button>
+          <button class="chip" data-filter="organized">Done</button>
+          <button class="chip" data-filter="empty">Empty</button>
+        </div>
+      </section>
+
+      <section class="selectionBar" id="selectionBar">
+        <div><strong id="selectedCount">0</strong> selected</div>
+        <div class="selectionActions">
+          <button id="selectVisibleBtn">Select visible</button>
+          <button id="clearSelectedBtn">Clear</button>
+          <button id="applyOrganizeBtn" class="primarySmall">Move selected to folders</button>
+          <button id="quarantineBtn" class="dangerSmall">Quarantine selected</button>
+        </div>
+      </section>
+
+      <section id="reviewTab" class="tabPanel active">
+        <div class="splitGrid">
+          <section class="panel">
+            <div class="panelTitle">
+              <div>
+                <small>AT A GLANCE</small>
+                <h3>Suggested folders</h3>
+              </div>
+              <div class="panelActions">
+                <button id="selectOrganizeBtn" class="smallBtn">Select safe moves</button>
+                <button id="panelOrganizeSafeBtn" class="primarySmall">Move safe now</button>
+              </div>
+            </div>
+            <div id="categoryGrid" class="categoryGrid emptyState">Run scan to see categories.</div>
+          </section>
+
+          <section class="panel">
+            <div class="panelTitle">
+              <div>
+                <small>LOCKED PREVIEW</small>
+                <h3>First locked top bar items</h3>
+              </div>
+              <span class="statusPill">Protected</span>
+            </div>
+            <div id="protectedPreview" class="protectedPreview emptyState">Run scan to preview protected bar items.</div>
+          </section>
+        </div>
+
+        <section class="panel listPanel">
+          <div class="panelTitle">
+            <div>
+              <small>REVIEW BEFORE APPLYING</small>
+              <h3>Bookmark suggestions</h3>
+            </div>
+            <button id="undoBtn" class="smallBtn">Undo last move</button>
+          </div>
+          <div id="suggestionsList" class="list emptyState">Run scan to load bookmarks.</div>
+        </section>
+      </section>
+
+      <section id="nsfwTab" class="tabPanel">
+        <section class="panel warningPanel">
+          <div class="panelTitle">
+            <div>
+              <small>PRIVATE CLEANUP</small>
+              <h3>NSFW review</h3>
+            </div>
+            <button id="selectNsfwBtn" class="smallBtn">Select flagged</button>
+          </div>
+          <p class="panelCopy">Flagged links are not deleted automatically. Quarantine moves them into a review folder outside the top bar. Permanent delete requires another confirmation.</p>
+          <div class="actionStrip">
+            <button id="quarantineNsfwBtn" class="dangerSmall">Quarantine flagged</button>
+            <button id="deleteNsfwBtn" class="deleteBtn">Permanent delete flagged</button>
+          </div>
+          <div id="nsfwList" class="list emptyState">Run scan to check for flagged links.</div>
+        </section>
+      </section>
+
+      <section id="duplicatesTab" class="tabPanel">
+        <section class="panel">
+          <div class="panelTitle">
+            <div>
+              <small>DUPLICATE URLS</small>
+              <h3>Duplicate review</h3>
+            </div>
+            <button id="selectDupesBtn" class="smallBtn">Select duplicate copies</button>
+          </div>
+          <p class="panelCopy">BookmarkFog keeps the oldest copy and marks later copies as duplicates. Quarantine first, delete later if it looks right.</p>
+          <div class="actionStrip">
+            <button id="quarantineDupesBtn" class="dangerSmall">Quarantine duplicates</button>
+          </div>
+          <div id="dupeList" class="list emptyState">Run scan to find duplicates.</div>
+        </section>
+      </section>
+
+      <section id="backupTab" class="tabPanel">
+        <section class="panel backupGridPanel">
+          <div class="panelTitle">
+            <div>
+              <small>ROLLBACK PLAN</small>
+              <h3>Backups and restore</h3>
+            </div>
+          </div>
+          <div class="backupGrid">
+            <article class="backupCard">
+              <span>💾</span>
+              <h4>JSON backup</h4>
+              <p>Best for BookmarkFog restore. Saved through Chrome downloads.</p>
+              <button id="backupJsonBtn" class="primarySmall">Export JSON</button>
+            </article>
+            <article class="backupCard">
+              <span>🌐</span>
+              <h4>HTML backup</h4>
+              <p>Best for Chrome Bookmark Manager import if you want manual fallback.</p>
+              <button id="backupHtmlBtn" class="primarySmall">Export HTML</button>
+            </article>
+            <article class="backupCard">
+              <span>📥</span>
+              <h4>Safe restore</h4>
+              <p>Imports a BookmarkFog JSON backup into a new restore folder. It does not overwrite your current bookmarks.</p>
+              <label class="fileButton">
+                Import JSON
+                <input id="restoreInput" type="file" accept="application/json,.json" />
+              </label>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panelTitle">
+            <div>
+              <small>EMPTY FOLDERS</small>
+              <h3>Folder cleanup</h3>
+            </div>
+            <button id="selectEmptyBtn" class="smallBtn">Select empty</button>
+          </div>
+          <div class="actionStrip">
+            <button id="removeEmptyBtn" class="dangerSmall">Remove selected empty folders</button>
+          </div>
+          <div id="emptyList" class="list emptyState">Run scan to find empty folders.</div>
+        </section>
+      </section>
+
+      <section id="settingsTab" class="tabPanel">
+        <section class="panel settingsPanel">
+          <div class="panelTitle">
+            <div>
+              <small>SAFETY DEFAULTS</small>
+              <h3>Settings</h3>
+            </div>
+            <button id="saveSettingsBtn" class="primarySmall">Save</button>
+          </div>
+          <div class="settingsGrid">
+            <label class="toggleRow">
+              <input id="protectBarInput" type="checkbox" />
+              <span><strong>Protect first top bar items</strong><small>Only locks the first bookmarks you see on the bar. Later overflow items can be organized.</small></span>
+            </label>
+            <label class="toggleRow">
+              <input id="autoBackupInput" type="checkbox" />
+              <span><strong>Auto backup before changes</strong><small>Export JSON before moving, deleting, or folder cleanup.</small></span>
+            </label>
+            <label class="toggleRow">
+              <input id="keepFoldersTogetherInput" type="checkbox" />
+              <span><strong>Keep existing folders together</strong><small>Moves whole folders into a category instead of pulling bookmarks out of folders you already made.</small></span>
+            </label>
+            <label class="fieldRow">
+              <span>Put organized folders in</span>
+              <select id="organizeDestinationInput">
+                <option value="bookmarksBar">Bookmarks Bar, after locked shortcuts</option>
+                <option value="otherBookmarks">Other Bookmarks menu</option>
+              </select>
+              <small>Bookmarks Bar keeps the new category folders visible in Chrome. Other Bookmarks keeps the bar cleaner.</small>
+            </label>
+            <label class="fieldRow">
+              <span>Top bar items to lock</span>
+              <input id="protectTopBarLimitInput" type="number" min="0" max="50" step="1" />
+            </label>
+            <label class="fieldRow">
+              <span>Organized folder name</span>
+              <input id="rootFolderInput" type="text" />
+            </label>
+            <label class="fieldRow">
+              <span>Quarantine folder name</span>
+              <input id="quarantineFolderInput" type="text" />
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="bookmarkfog-core.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
